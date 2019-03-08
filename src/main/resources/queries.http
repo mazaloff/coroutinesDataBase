@@ -1,0 +1,41 @@
+
+GET {{host}}/widget/
+Content-Type: application/json
+cache-control: no-cache
+
+###
+
+GET {{host}}/widget/3
+Content-Type: application/json
+cache-control: no-cache
+
+###
+
+POST {{host}}/widget/
+Content-Type: application/json
+cache-control: no-cache
+
+{
+  "name": "name",
+  "quantity": 34
+}
+
+###
+
+PUT {{host}}/widget/
+Content-Type: application/json
+cache-control: no-cache
+
+{
+  "id": 20,
+  "name": "name2",
+  "quantity": 34
+}
+
+###
+
+DELETE {{host}}/widget/20
+Content-Type: application/json
+cache-control: no-cache
+
+###
