@@ -7,7 +7,7 @@ import kotlinx.coroutines.async
 
 object ApiClientImp: ApiClient {
 
-    override fun login(auth: Authorization) : Deferred<GithubUser> = GlobalScope.async {
+    override fun loginAsync(auth: Authorization) : Deferred<GithubUser> = GlobalScope.async {
         val response = get("https://api.github.com/user", auth = auth)
         if (response.statusCode != 200) {
             throw RuntimeException("Incorrect login or password")
@@ -20,7 +20,4 @@ object ApiClientImp: ApiClient {
         }
     }
 
-    override fun getRepositories(reposUrl: String, auth: Authorization): Deferred<List<GithubRepository>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 }

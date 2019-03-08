@@ -3,6 +3,7 @@ package settings
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException
+import java.io.FileOutputStream
 import java.util.*
 
 object Settings {
@@ -25,17 +26,25 @@ object Settings {
             return date["passwordH2"] ?: ""
         }
 
-    private fun readSettings() {
+    private fun mapToProperties(mapProp: MutableMap<String, String>, path: String) {
+        val fos = FileOutputStream(File(path))
+        val prop = Properties()
 
-        date = mutableMapOf()
-        val fis = try {
-            FileInputStream("src\\main\\resources\\local.properties")
-        } catch (e: FileNotFoundException) {
-            val fileNew = File("src\\main\\resources\\local.properties")
-            fileNew.writeText("")
-            fileNew.inputStream()
+        for (entity in mapProp) {
+            prop.setProperty(entity.key, entity.value)
         }
 
+        prop.store(fos, null)
+        fos.close()
+    }
+
+    private fun mapFromProperties(path: String): MutableMap<String, String> {
+        val result: MutableMap<String, String> = mutableMapOf()
+        val fis = try {
+            FileInputStream(path)
+        } catch (e: FileNotFoundException) {
+            return result
+        }
         val prop = Properties()
         prop.load(fis)
         fis.close()
@@ -44,8 +53,19 @@ object Settings {
         while (enumKeys.hasMoreElements()) {
             val key = enumKeys.nextElement() as String
             val value = prop.getProperty(key)
-            date[key] = value
+            result[key] = value
         }
+        return result
+    }
+
+    private fun readSettings() {
+
+        date = mutableMapOf("passwordGit" to "", "passwordPostgresql" to "")
+
+        val pathProperties = "src\\main\\resources\\local.properties"
+        if (!File(pathProperties).exists()) mapToProperties(date, pathProperties)
+
+        date = mapFromProperties(pathProperties)
+
     }
 }
-
